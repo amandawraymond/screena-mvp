@@ -1,6 +1,6 @@
 angular.module('myApp')
-.controller('QuestionaireCtrl', ['$scope', "$http",  function ($scope, $http) {
-
+.controller('QuestionaireCtrl', ["$http", "$scope", function($http, $scope){
+  
   $scope.questions = [];
 
   $http.get('/questions.json').success(function(data){
@@ -12,21 +12,60 @@ angular.module('myApp')
     question_number: -1
   };
 
-  
   $scope.numQuestions = function() {
     return $scope.questions.length;
   };
   
+  $scope.option = {
+    selected: ""
+  };
+
+  var defaultForm = angular.copy($scope.option);
+
+  $scope.resetForm = function () {
+    $scope.option = angular.copy(defaultForm);
+    $scope.questionaire.$setPristine();
+  };
+  
+  $scope.goToNextQuestion = function() {
+    $scope.selectedCounter = 0;
+
+    if ($scope.currentQuestion.question_number < $scope.numQuestions()) {
+      $scope.currentQuestion = $scope.questions[$scope.currentQuestion.question_number];
+      $scope.resetForm();
+    }
+    console.log($scope.answers);
+    console.log($scope.weights);
+  };
+
   $scope.answers = [];
   $scope.weights = [];
-  
-  $scope.goToNextQuestion = function (answer,weight) {
-    if ($scope.currentQuestion.question_number < $scope.numQuestions()) {
+
+  $scope.saveScore = function(answer, weight) {
+    $scope.answers.push(answer);
+    $scope.weights.push(weight);
+  };
+
+
+  $scope.addCheckedAnswers = function (answer, weight) {
+    if (option.selected) {
       $scope.answers.push(answer);
       $scope.weights.push(weight);
-      $scope.currentQuestion = $scope.questions[$scope.currentQuestion.question_number];
     }
   };
+
+  
+  $scope.change = function(option) {
+    $scope.selectedCounter = 0;
+    if (option.selected) {
+      $scope.selectedCounter++;
+    } else {
+      $scope.selectedCounter--;
+    } 
+  };
+  
+
+
   
   $scope.isDone = function() {
     return $scope.currentQuestion.question_number === $scope.numQuestions();
@@ -42,17 +81,5 @@ angular.module('myApp')
     });
   };
   
-  $scope.ProgressBar = function(guess) {
-    guess.chosen = true;
-    var found = false;
-    _.each($scope.secretWord, function(letter) {
-      if(guess.name.toUpperCase() === letter.name.toUpperCase()) {
-        letter.chosen = true;
-        found = true;
-      };
-    }); 
-  };
-
-  $scope.numbers = makeNumbers("1,2,3,4,5,6,7,8,9");
 
 }]);

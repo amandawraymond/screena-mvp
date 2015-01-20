@@ -20,9 +20,9 @@ question_skill.options.create(answer:"Technology", weight:"1")
 question_skill.options.create(answer:"Design", weight:"1")
 
 question_years = Question.create(question_number: 7, name:"years", label:"How many years have you been working as a Product Manager?", input_type:"select")
-question_years.options.create(answer:"0-3", weight:"1")
-question_years.options.create(answer:"3-7", weight:"1")
-question_years.options.create(answer:"7 and above", weight:"1")
+question_years.options.create(answer:"0-3", weight:"3")
+question_years.options.create(answer:"3-7", weight:"5")
+question_years.options.create(answer:"7 and above", weight:"7")
 
 question_companies = Question.create(question_number: 8, name:"companies", label:"What type of companies have you worked at?", input_type:"checkbox")
 question_companies.options.create(answer:"Startups", weight:"1")
